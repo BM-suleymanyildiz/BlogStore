@@ -24,7 +24,29 @@ namespace BlogStore.PresentationLayer.Controllers
         [HttpPost]
         public IActionResult CreateComment(Comment comment)
         {
+            comment.CommentDate = DateTime.Now;
+            comment.IsValid = false; 
             _commentService.TInsert(comment);
+            return RedirectToAction("CommentList");
+        }
+
+        public IActionResult DeleteComment(int id)
+        {
+            _commentService.TDelete(id);
+            return RedirectToAction("CommentList");
+        }
+
+        [HttpGet]
+        public IActionResult UpdateComment(int id)
+        {
+            var value = _commentService.TGetById(id);
+            return View(value);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateComment(Comment comment)
+        {
+            _commentService.TUpdate(comment);
             return RedirectToAction("CommentList");
         }
     }
