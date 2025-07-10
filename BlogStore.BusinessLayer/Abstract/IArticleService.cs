@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogStore.DataAccessLayer.Abstract
+namespace BlogStore.BusinessLayer.Abstract
 {
-    public interface ICommentDal : IGenericDal<Comment>
+    public interface IArticleService : IGenericService<Article>
     {
     }
 }
