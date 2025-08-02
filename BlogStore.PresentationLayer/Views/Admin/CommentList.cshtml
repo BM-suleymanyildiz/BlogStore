@@ -1,0 +1,122 @@
+@model List<BlogStore.EntityLayer.Entities.Comment>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Yorumlarım";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h5 class="card-title fw-semibold mb-0">Yaptığım Yorumlar</h5>
+                    <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-primary btn-sm">
+                        <i class="ti ti-arrow-left"></i> Dashboard'a Dön
+                    </a>
+                </div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="ti ti-check-circle me-2"></i>
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="ti ti-alert-circle me-2"></i>
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Makale</th>
+                                <th>Yorum Detayı</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.CommentId</td>
+                                        <td>
+                                            @if (item.Article != null)
+                                            {
+                                                <div class="d-flex align-items-center">
+                                                    @if (!string.IsNullOrEmpty(item.Article.ImageUrl))
+                                                    {
+                                                        <img src="@item.Article.ImageUrl" alt="@item.Article.Title" class="rounded-circle me-3" width="40" height="40">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/flexy-bootstrap-lite-1.0.0/assets/images/profile/user-1.jpg" alt="" class="rounded-circle me-3" width="40" height="40">
+                                                    }
+                                                    <div>
+                                                        <h6 class="fw-semibold mb-0">@item.Article.Title</h6>
+                                                        <small class="text-muted">@(item.Article.Description?.Length > 50 ? item.Article.Description.Substring(0, 50) + "..." : item.Article.Description)</small>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Makale bulunamadı</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 300px;" title="@item.CommentDetail">
+                                                @(item.CommentDetail?.Length > 100 ? item.CommentDetail.Substring(0, 100) + "..." : item.CommentDetail)
+                                            </div>
+                                        </td>
+                                        <td>@item.CommentDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>
+                                            @if (item.IsValid)
+                                            {
+                                                <span class="badge bg-success">Onaylı</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">Beklemede</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                                                                 <a href="/Admin/DeleteComment/@item.CommentId" 
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Bu yorumu silmek istediğinizden emin misiniz?')">
+                                                     <i class="ti ti-trash"></i> Sil
+                                                 </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        <i class="ti ti-message-circle fs-2 mb-2"></i>
+                                        <p>Henüz yorum yapmamışsınız</p>
+                                        <small>Makalelere yorum yaptığınızda burada görünecek</small>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

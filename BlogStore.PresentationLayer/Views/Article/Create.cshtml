@@ -1,0 +1,97 @@
+@model BlogStore.EntityLayer.Entities.Article
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">Yeni Makale Oluştur</h5>
+                
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label">Makale Başlığı</label>
+                                <input asp-for="Title" class="form-control" placeholder="Makale başlığını girin">
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="CategoryId" class="form-label">Kategori</label>
+                                <select asp-for="CategoryId" class="form-select">
+                                    <option value="">Kategori Seçin</option>
+                                    @foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option value="@category.CategoryId">@category.CategoryName</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Makale İçeriği</label>
+                                <textarea asp-for="Description" class="form-control" rows="10" placeholder="Makale içeriğini girin"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="articleImage" class="form-label">Makale Görseli</label>
+                                <input type="file" id="articleImage" name="articleImage" class="form-control" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Durum</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="isActive" checked>
+                                    <label class="form-check-label">
+                                        Makale Aktif
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label asp-for="ImageUrl" class="form-label">Makale Görseli URL</label>
+                                <input asp-for="ImageUrl" class="form-control" placeholder="Makale görseli URL'si">
+                                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-save"></i> Makaleyi Kaydet
+                            </button>
+                            <a href="/Admin/Article/List" class="btn btn-secondary ms-2">
+                                <i class="ti ti-arrow-left"></i> Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // CKEditor veya başka bir rich text editor eklenebilir
+        // Şimdilik basit textarea kullanıyoruz
+    </script>
+} 

@@ -1,0 +1,82 @@
+@model BlogStore.EntityLayer.Entities.Category
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Kategori Düzenle";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h5 class="card-title fw-semibold mb-0">Kategori Düzenle</h5>
+                    <a href="/Admin/CategoryList" class="btn btn-outline-primary btn-sm">
+                        <i class="ti ti-arrow-left"></i> Kategorilere Dön
+                    </a>
+                </div>
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="ti ti-alert-circle me-2"></i>
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form asp-action="CategoryEdit" method="post">
+                    <input type="hidden" asp-for="CategoryId" />
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="CategoryName" class="form-label">Kategori Adı</label>
+                                <input asp-for="CategoryName" class="form-control" placeholder="Kategori adını giriniz..." required>
+                                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                            </div>
+
+                            
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Kategori Bilgileri</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        <li><strong>ID:</strong> @Model.CategoryId</li>
+                                        <li><strong>Mevcut Ad:</strong> @Model.CategoryName</li>
+                                        <li><i class="ti ti-info-circle me-2"></i>Değişiklikler anında kaydedilir</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti ti-check me-2"></i>Değişiklikleri Kaydet
+                                </button>
+                                <a href="/Admin/CategoryList" class="btn btn-outline-secondary">
+                                    <i class="ti ti-x me-2"></i>İptal
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation için basit JavaScript
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var categoryName = document.getElementById('CategoryName').value.trim();
+
+            if (!categoryName) {
+                alert('Lütfen kategori adını giriniz.');
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+} 

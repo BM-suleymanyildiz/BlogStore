@@ -1,0 +1,103 @@
+@model List<BlogStore.EntityLayer.Entities.Category>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Kategorilerim";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                                 <div class="d-flex align-items-center justify-content-between mb-4">
+                     <h5 class="card-title fw-semibold mb-0">Tüm Kategoriler</h5>
+                     <a href="/Admin/CategoryCreate" class="btn btn-primary btn-sm">
+                         <i class="ti ti-plus"></i> Yeni Kategori
+                     </a>
+                 </div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="ti ti-check-circle me-2"></i>
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                                 @if (TempData["ErrorMessage"] != null)
+                 {
+                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                         <i class="ti ti-alert-circle me-2"></i>
+                         @TempData["ErrorMessage"]
+                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                     </div>
+                 }
+
+                 
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                                                                         <thead>
+                            <tr>
+                                <th>Kategori Adı</th>
+                                <th>Makale Sayısı</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                         <td>
+                                             <span class="badge bg-primary fs-6">@item.CategoryName</span>
+                                         </td>
+                                         <td>
+                                             <span class="badge bg-info">@(ViewBag.ArticleCounts != null ? ViewBag.ArticleCounts[item.CategoryId] : 0) makale</span>
+                                         </td>
+                                         <td>
+                                             @if (ViewBag.ArticleCounts != null && ViewBag.ArticleCounts[item.CategoryId] > 0)
+                                             {
+                                                 <span class="badge bg-success">Kullanılıyor</span>
+                                             }
+                                             else
+                                             {
+                                                 <span class="badge bg-secondary">Kullanılmıyor</span>
+                                             }
+                                         </td>
+                                         <td>
+                                             <div class="d-flex gap-2">
+                                                 <a href="/Admin/CategoryEdit/@item.CategoryId" class="btn btn-sm btn-outline-primary">
+                                                     <i class="ti ti-edit"></i> Düzenle
+                                                 </a>
+                                                 <a href="/Admin/CategoryDelete/@item.CategoryId"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
+                                                     <i class="ti ti-trash"></i> Sil
+                                                 </a>
+                                             </div>
+                                         </td>
+                                     </tr>
+                                }
+                            }
+                            else
+                            {
+                                                                                                 <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        <i class="ti ti-category fs-2 mb-2"></i>
+                                        <p>Henüz kategori bulunmuyor</p>
+                                        <a href="/Admin/CategoryCreate" class="btn btn-primary btn-sm">
+                                            <i class="ti ti-plus"></i> İlk Kategoriyi Oluştur
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

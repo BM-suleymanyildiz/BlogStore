@@ -1,0 +1,124 @@
+@{
+    Layout = null;
+}
+
+<!-- /*
+* Template Name: Blogy
+* Template Author: Untree.co
+* Template URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+<!doctype html>
+<html lang="en">
+@await Component.InvokeAsync("_HeadLayoutComponentPartial")
+<body>
+
+    @await Component.InvokeAsync("_NavbarLayoutComponentPartial")
+
+    <div class="hero overlay inner-page bg-primary py-5">
+        <div class="container">
+            <div class="row align-items-center justify-content-center text-center pt-5">
+                <div class="col-lg-6">
+                    <h1 class="heading text-white mb-3" data-aos="fade-up">@ViewBag.AuthorName</h1>
+                    <p class="text-white" data-aos="fade-up">@ViewBag.AuthorUsername kullanıcısının tüm yazılarını keşfedin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @if (ViewBag.Articles != null && ViewBag.Articles.Count > 0)
+    {
+        <div class="section search-result-wrap">
+            <div class="container">
+                <div class="row posts-entry">
+                    <div class="col-lg-12">
+                        @foreach (var article in ViewBag.Articles)
+                        {
+                            <div class="blog-entry d-flex blog-entry-search-item">
+                                <a href="/Article/ArticleDetail/@article.ArticleId" class="img-link me-4">
+                                    <img src="@(string.IsNullOrEmpty(article.ImageUrl) ? "/flexy-bootstrap-lite-1.0.0/assets/images/profile/user-1.jpg" : article.ImageUrl)" alt="Image" class="img-fluid">
+                                </a>
+                                <div>
+                                    <span class="date">@article.CreatedDate.ToString("dd-MMM-yyyy") &bullet; <a href="#">@(article.Category?.CategoryName ?? "Kategori Yok")</a></span>
+                                    <h2><a href="/Article/ArticleDetail/@article.ArticleId">@article.Title</a></h2>
+                                    <p>@(article.Description?.Length > 100 ? article.Description.Substring(0, 100) + "..." : article.Description)</p>
+                                    <p><a href="/Article/ArticleDetail/@article.ArticleId" class="btn btn-sm btn-outline-primary">Devamını Oku</a></p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="section search-result-wrap">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="text-muted">Henüz yazı bulunmuyor</h3>
+                        <p class="text-muted">Bu yazar henüz yazı yayınlamamış.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="widget">
+                        <h3 class="mb-4">Hakkımızda</h3>
+                        <p>BlogStore, bilgi paylaşımı ve içerik üretimi için tasarlanmış modern bir blog platformudur. Kullanıcılarımızın deneyimlerini ve bilgilerini paylaşabilecekleri güvenli bir ortam sunuyoruz.</p>
+                    </div> <!-- /.widget -->
+                    <div class="widget">
+                        <h3>Sosyal Medya</h3>
+                        <ul class="list-unstyled social">
+                            <li><a href="#"><span class="icon-instagram"></span></a></li>
+                            <li><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li><a href="#"><span class="icon-linkedin"></span></a></li>
+                            <li><a href="#"><span class="icon-pinterest"></span></a></li>
+                            <li><a href="#"><span class="icon-dribbble"></span></a></li>
+                        </ul>
+                    </div> <!-- /.widget -->
+                </div> <!-- /.col-lg-4 -->
+                <div class="col-lg-4 ps-lg-5">
+                    <div class="widget">
+                        <h3 class="mb-4">Şirket</h3>
+                        <ul class="list-unstyled float-start links">
+                            <li><a href="#">Hakkımızda</a></li>
+                            <li><a href="#">Hizmetler</a></li>
+                            <li><a href="#">Vizyon</a></li>
+                            <li><a href="#">Misyon</a></li>
+                            <li><a href="#">Şartlar</a></li>
+                            <li><a href="#">Gizlilik</a></li>
+                        </ul>
+                        <ul class="list-unstyled float-start links">
+                            <li><a href="#">Ortaklar</a></li>
+                            <li><a href="#">İş</a></li>
+                            <li><a href="#">Kariyer</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">SSS</a></li>
+                            <li><a href="#">Yaratıcı</a></li>
+                        </ul>
+                    </div> <!-- /.widget -->
+                </div> <!-- /.col-lg-4 -->
+                <div class="col-lg-4">
+                    <div class="widget">
+                        <h3 class="mb-4">Son Yazılar</h3>
+                        @await Component.InvokeAsync("_FooterRecentArticlesComponentPartial")
+                    </div> <!-- /.widget -->
+                </div> <!-- /.col-lg-4 -->
+            </div> <!-- /.row -->
+        </div> <!-- /.container -->
+    </footer> <!-- /.site-footer -->
+    <!-- Preloader -->
+    @await Component.InvokeAsync("_ScriptsLayoutComponentPartial")
+
+</body>
+</html> 

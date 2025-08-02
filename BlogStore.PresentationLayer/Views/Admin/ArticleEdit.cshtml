@@ -1,0 +1,162 @@
+@model BlogStore.EntityLayer.Entities.Article
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Makale Düzenle";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h5 class="card-title fw-semibold mb-0">Makale Düzenle</h5>
+                    <a href="/Admin/ArticleList" class="btn btn-outline-primary btn-sm">
+                        <i class="ti ti-arrow-left"></i> Makalelerime Dön
+                    </a>
+                </div>
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="ti ti-alert-circle me-2"></i>
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="ti ti-alert-circle me-2"></i>
+                        <strong>Form Hataları:</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form asp-action="ArticleEdit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="ArticleId" />
+                    <input type="hidden" asp-for="CreatedDate" />
+                    <input type="hidden" asp-for="AppUserId" />
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label">Makale Başlığı</label>
+                                <input asp-for="Title" class="form-control" placeholder="Makale başlığını giriniz..." required>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Makale İçeriği</label>
+                                <textarea asp-for="Description" class="form-control" rows="10" placeholder="Makale içeriğini giriniz..." required></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="CategoryId" class="form-label">Kategori</label>
+                                <select asp-for="CategoryId" class="form-select" required>
+                                    <option value="">Kategori Seçiniz</option>
+                                    @if (ViewBag.Categories != null)
+                                    {
+                                        @foreach (var category in ViewBag.Categories)
+                                        {
+                                            if (category.CategoryId == Model.CategoryId)
+                                            {
+                                                <option value="@category.CategoryId" selected>@category.CategoryName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@category.CategoryId">@category.CategoryName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="ImageUrl" class="form-label">Resim URL</label>
+                                <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg">
+                                <small class="form-text text-muted">Makale için resim URL'si (opsiyonel)</small>
+                                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            </div>
+
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Makale Bilgileri</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        <li><strong>ID:</strong> @Model.ArticleId</li>
+                                        <li><strong>Oluşturulma Tarihi:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</li>
+                                        <li><i class="ti ti-info-circle me-2"></i>Değişiklikler anında kaydedilir</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti ti-check me-2"></i>Değişiklikleri Kaydet
+                                </button>
+                                <a href="/Admin/ArticleList" class="btn btn-outline-secondary">
+                                    <i class="ti ti-x me-2"></i>İptal
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation için basit JavaScript
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var title = document.getElementById('Title').value.trim();
+            var description = document.getElementById('Description').value.trim();
+            var categoryId = document.getElementById('CategoryId').value;
+            
+            if (!title) {
+                alert('Lütfen makale başlığını giriniz.');
+                e.preventDefault();
+                return false;
+            }
+            
+            if (title.length < 3) {
+                alert('Makale başlığı en az 3 karakter olmalıdır.');
+                e.preventDefault();
+                return false;
+            }
+            
+            if (title.length > 200) {
+                alert('Makale başlığı en fazla 200 karakter olabilir.');
+                e.preventDefault();
+                return false;
+            }
+            
+            if (!description) {
+                alert('Lütfen makale içeriğini giriniz.');
+                e.preventDefault();
+                return false;
+            }
+            
+            if (!categoryId) {
+                alert('Lütfen kategori seçiniz.');
+                e.preventDefault();
+                return false;
+            }
+            
+            // Form gönderiliyor
+            console.log('Form gönderiliyor...');
+        });
+    </script>
+} 

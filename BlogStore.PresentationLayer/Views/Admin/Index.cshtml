@@ -1,0 +1,216 @@
+@model BlogStore.PresentationLayer.Models.DashboardViewModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">BlogStore Dashboard</h5>
+                
+                <!-- İstatistik Kartları -->
+                <div class="row">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card overflow-hidden rounded-2">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <span class="round-8 bg-primary rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="ti ti-file-text text-white fs-4"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-semibold mb-1">Toplam Makale</h6>
+                                        <h4 class="fw-semibold mb-0">@Model.TotalArticles</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card overflow-hidden rounded-2">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <span class="round-8 bg-success rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="ti ti-category text-white fs-4"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-semibold mb-1">Kategoriler</h6>
+                                        <h4 class="fw-semibold mb-0">@Model.TotalCategories</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card overflow-hidden rounded-2">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <span class="round-8 bg-warning rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="ti ti-message-circle text-white fs-4"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-semibold mb-1">Yorumlar</h6>
+                                        <h4 class="fw-semibold mb-0">@Model.TotalComments</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card overflow-hidden rounded-2">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <span class="round-8 bg-info rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="ti ti-star text-white fs-4"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-semibold mb-1">Popüler Makale</h6>
+                                        <h4 class="fw-semibold mb-0">@Model.PopularArticleTitle</h4>
+                                        @if (Model.PopularArticleCommentCount > 0)
+                                        {
+                                            <small class="text-muted">@Model.PopularArticleCommentCount yorum</small>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Ana İçerik -->
+                <div class="row mt-4">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h5 class="card-title fw-semibold mb-0">Son Makalelerim</h5>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Başlık</th>
+                                                <th>Kategori</th>
+                                                <th>Yazar</th>
+                                                <th>Tarih</th>
+                                                <th>Durum</th>
+                                                <th>İşlemler</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.RecentArticles != null && Model.RecentArticles.Any())
+                                            {
+                                                @foreach (var article in Model.RecentArticles)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                @if (!string.IsNullOrEmpty(article.ImageUrl))
+                                                                {
+                                                                    <img src="@article.ImageUrl" alt="@article.Title" class="rounded-circle me-3" width="40" height="40">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img src="~/flexy-bootstrap-lite-1.0.0/assets/images/profile/user-1.jpg" alt="" class="rounded-circle me-3" width="40" height="40">
+                                                                }
+                                                                <div>
+                                                                    <h6 class="fw-semibold mb-0">@article.Title</h6>
+                                                                    <small class="text-muted">@(article.Description?.Length > 50 ? article.Description.Substring(0, 50) + "..." : article.Description)</small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            @if (article.Category != null)
+                                                            {
+                                                                <span class="badge bg-primary">@article.Category.CategoryName</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge bg-secondary">Kategori Yok</span>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (article.AppUser != null)
+                                                            {
+                                                                @article.AppUser.UserName
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text-muted">Anonim</span>
+                                                            }
+                                                        </td>
+                                                        <td>@article.CreatedDate.ToString("dd.MM.yyyy")</td>
+                                                        <td><span class="badge bg-success">Yayında</span></td>
+                                                        <td>
+                                                            <div class="d-flex gap-2">
+                                                                <a href="/Admin/Article/Edit/@article.ArticleId" class="btn btn-sm btn-outline-primary"><i class="ti ti-edit"></i></a>
+                                                                <a href="/Admin/Article/Delete/@article.ArticleId" class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="6" class="text-center text-muted">
+                                                        <i class="ti ti-file-text fs-2 mb-2"></i>
+                                                        <p>Henüz makale bulunmuyor</p>
+                                                                                                                 <a href="/Admin/ArticleCreate" class="btn btn-primary btn-sm">
+                                                             <i class="ti ti-plus"></i> İlk Makaleyi Oluştur
+                                                         </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-semibold mb-4">Hızlı İşlemlerim</h5>
+                                        <div class="d-grid gap-2">
+                                                                                         <a href="/Admin/ArticleCreate" class="btn btn-primary">
+                                                 <i class="ti ti-plus me-2"></i>Yeni Makale
+                                             </a>
+                                                                                                                                            <a href="/Category/CategoryList" class="btn btn-outline-primary">
+                                                <i class="ti ti-category me-2"></i>Kategorilerim
+                                            </a>
+                                            <a href="/Admin/CommentList" class="btn btn-outline-warning">
+                                                <i class="ti ti-message-circle me-2"></i>Yorumlarım
+                                            </a>
+                                                                                         <a href="/Admin/Profile" class="btn btn-outline-info">
+                                                 <i class="ti ti-user-circle me-2"></i>Profilim
+                                             </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

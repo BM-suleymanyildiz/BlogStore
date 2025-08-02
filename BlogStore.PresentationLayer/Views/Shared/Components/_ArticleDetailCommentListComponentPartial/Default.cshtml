@@ -1,0 +1,178 @@
+﻿@model List<BlogStore.EntityLayer.Entities.Comment>
+@using BlogStore.PresentationLayer.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<BlogStore.EntityLayer.Entities.AppUser> SignInManager
+@{
+    var articleId = ViewBag.i;
+    var encodedArticleId = IdEncoder.EncodeId(articleId);
+}
+<div class="pt-5 comment-wrap">
+    <h3 class="mb-5 heading">@Model.Count Yorum</h3>
+    <ul id="commentList" class="comment-list">
+        @foreach (var item in Model)
+        {
+            <li class="comment">
+                <div class="vcard">
+                    @if (!string.IsNullOrEmpty(item.AppUser?.ImageUrl) && item.AppUser.ImageUrl != "test")
+                    {
+                        <img src="@item.AppUser.ImageUrl" alt="Image placeholder">
+                    }
+                    else
+                    {
+                        <img src="/blogy-1.0.0/images/person_1.jpg" alt="Default user image">
+                    }
+                </div>
+                <div class="comment-body">
+                    <h3>@item.UserNameSurname</h3>
+                    <div class="meta">@item.CommentDate.ToString("dd-MMM-yyyy")</div>
+                    <p>@item.CommentDetail</p>
+                    <p><a href="#" class="reply rounded" onclick="showReplyForm(@item.CommentId)">Yanıtla</a></p>
+                    
+                    <!-- Yanıt formu (gizli) -->
+                    <div id="replyForm_@item.CommentId" class="reply-form mt-3" style="display: none;">
+                        <form class="reply-comment-form">
+                            <div class="form-group">
+                                <textarea class="form-control" rows="3" placeholder="Yanıtınızı yazın..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-sm btn-primary">Yanıt Gönder</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="hideReplyForm(@item.CommentId)">İptal</button>
+                            </div>
+                            <div class="reply-result mt-2"></div>
+                        </form>
+                    </div>
+                    
+                    <!-- Yanıtlar -->
+                    @if (item.Replies != null && item.Replies.Any())
+                    {
+                        <div class="replies mt-3">
+                            @foreach (var reply in item.Replies)
+                            {
+                                <div class="reply-item ml-4 p-3 bg-light rounded">
+                                    <h6>@reply.UserNameSurname</h6>
+                                    <small class="text-muted">@reply.CommentDate.ToString("dd-MMM-yyyy")</small>
+                                    <p class="mb-0">@reply.CommentDetail</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+    <!-- END comment-list -->
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="comment-form-wrap pt-5">
+            <h3 class="mb-5">Bir Yorum Bırakın</h3>
+            <form id="commentForm" class="p-5 bg-light">
+                <div class="form-group">
+                    <label for="message">Yorumunuz</label>
+                    <textarea id="message" cols="30" rows="5" class="form-control" required></textarea>
+                </div>
+                <input type="hidden" id="articleId" value="@articleId" />
+                <div class="form-group">
+                    <input type="submit" value="Yorumu Gönder" class="btn btn-primary" />
+                </div>
+                <div id="commentResult" class="mt-2"></div>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="comment-form-wrap pt-5">
+            <div class="p-5 bg-light text-center">
+                <h4>Yorum yapmak için giriş yapmanız gerekiyor</h4>
+                <a href="/Login/UserLogin" class="btn btn-primary">Giriş Yap</a>
+            </div>
+        </div>
+    }
+</div>
+@if (SignInManager.IsSignedIn(User))
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('commentForm');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const commentDetail = document.getElementById('message').value;
+                const articleId = document.getElementById('articleId').value;
+                
+                fetch('/Comment/AddCommentAjax', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        CommentDetail: commentDetail,
+                        ArticleId: parseInt(articleId)
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('commentResult').innerHTML = '<span class="text-success">' + data.message + '</span>';
+                        form.reset();
+                        // Yorum listesini yenile
+                        location.reload();
+                    } else {
+                        document.getElementById('commentResult').innerHTML = '<span class="text-warning">' + data.message + '</span>';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('commentResult').innerHTML = '<span class="text-warning">Lütfen kötü yorum yapmayın. Daha saygılı bir dil kullanın.</span>';
+                });
+            });
+
+            // Yanıt formları için event listener
+            document.addEventListener('submit', function (e) {
+                if (e.target.classList.contains('reply-comment-form')) {
+                    e.preventDefault();
+                    const form = e.target;
+                    const textarea = form.querySelector('textarea');
+                    const resultDiv = form.querySelector('.reply-result');
+                    const commentId = form.closest('.reply-form').id.replace('replyForm_', '');
+                    const articleId = document.getElementById('articleId').value;
+                    
+                    fetch('/Comment/AddReplyAjax', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            CommentDetail: textarea.value,
+                            ArticleId: parseInt(articleId),
+                            ParentCommentId: parseInt(commentId)
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            resultDiv.innerHTML = '<span class="text-success">' + data.message + '</span>';
+                            form.reset();
+                            // Yorum listesini yenile
+                            location.reload();
+                        } else {
+                            resultDiv.innerHTML = '<span class="text-warning">' + data.message + '</span>';
+                        }
+                    })
+                    .catch(() => {
+                        resultDiv.innerHTML = '<span class="text-warning">Lütfen kötü yorum yapmayın. Daha saygılı bir dil kullanın.</span>';
+                    });
+                }
+            });
+        });
+
+        // Yanıt formunu göster
+        function showReplyForm(commentId) {
+            document.getElementById('replyForm_' + commentId).style.display = 'block';
+        }
+
+        // Yanıt formunu gizle
+        function hideReplyForm(commentId) {
+            document.getElementById('replyForm_' + commentId).style.display = 'none';
+            document.getElementById('replyForm_' + commentId).querySelector('.reply-result').innerHTML = '';
+        }
+    </script>
+}

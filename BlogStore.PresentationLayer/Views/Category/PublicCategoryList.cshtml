@@ -1,0 +1,107 @@
+@model List<BlogStore.EntityLayer.Entities.Category>
+@{
+    Layout = null;
+}
+
+<!-- /*
+* Template Name: Blogy
+* Template Author: Untree.co
+* Template URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+<!doctype html>
+<html lang="en">
+@await Component.InvokeAsync("_HeadLayoutComponentPartial")
+
+<body>
+
+    @await Component.InvokeAsync("_NavbarLayoutComponentPartial")
+
+    <div class="section search-result-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="heading">Kategoriler</div>
+            </div>
+        </div>
+        <div class="row posts-entry">
+            <div class="col-12">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var category in Model)
+                    {
+                        <div class="blog-entry d-flex blog-entry-search-item">
+                            <div>
+                                <span class="date">Kategori &bullet; <a href="/Default/CategoryArticles/@category.CategoryId">@category.CategoryName</a></span>
+                                <h2><a href="/Default/CategoryArticles/@category.CategoryId">@category.CategoryName Kategorisindeki Yazılar</a></h2>
+                                <p><a href="/Default/CategoryArticles/@category.CategoryId" class="btn btn-sm btn-outline-primary">Yazıları Görüntüle</a></p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <h4 class="text-muted">Henüz kategori bulunmuyor</h4>
+                        <p class="text-muted">Yakında kategoriler eklenecek</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="widget">
+                        <h3 class="mb-4">Hakkımızda</h3>
+                        <p>BlogStore, bilgi paylaşımı ve içerik üretimi için tasarlanmış modern bir blog platformudur. Kullanıcılarımızın deneyimlerini ve bilgilerini paylaşabilecekleri güvenli bir ortam sunuyoruz.</p>
+                    </div> <!-- /.widget -->
+                    <div class="widget">
+                        <h3>Sosyal Medya</h3>
+                        <ul class="list-unstyled social">
+                            <li><a href="#"><span class="icon-instagram"></span></a></li>
+                            <li><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li><a href="#"><span class="icon-linkedin"></span></a></li>
+                            <li><a href="#"><span class="icon-pinterest"></span></a></li>
+                            <li><a href="#"><span class="icon-dribbble"></span></a></li>
+                        </ul>
+                    </div> <!-- /.widget -->
+                </div> <!-- /.col-lg-4 -->
+                <div class="col-lg-4 ps-lg-5">
+                    <div class="widget">
+                        <h3 class="mb-4">Şirket</h3>
+                        <ul class="list-unstyled float-start links">
+                            <li><a href="#">Hakkımızda</a></li>
+                            <li><a href="#">Hizmetler</a></li>
+                            <li><a href="#">Vizyon</a></li>
+                            <li><a href="#">Misyon</a></li>
+                            <li><a href="#">Şartlar</a></li>
+                            <li><a href="#">Gizlilik</a></li>
+                        </ul>
+                        <ul class="list-unstyled float-start links">
+                            <li><a href="#">Ortaklar</a></li>
+                            <li><a href="#">İş</a></li>
+                            <li><a href="#">Kariyer</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">SSS</a></li>
+                            <li><a href="#">Yaratıcı</a></li>
+                        </ul>
+                    </div> <!-- /.widget -->
+                </div> <!-- /.col-lg-4 -->
+                <div class="col-lg-4">
+                    <div class="widget">
+                        <h3 class="mb-4">Son Yazılar</h3>
+                        @await Component.InvokeAsync("_FooterRecentArticlesComponentPartial")
+                    </div> <!-- /.widget -->
+                </div> <!-- /.col-lg-4 -->
+            </div> <!-- /.row -->
+        </div> <!-- /.container -->
+    </footer> <!-- /.site-footer -->
+    <!-- Preloader -->
+    @await Component.InvokeAsync("_ScriptsLayoutComponentPartial")
+
+</body>
+</html> 

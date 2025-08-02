@@ -1,0 +1,27 @@
+﻿@model List<BlogStore.EntityLayer.Entities.Article>
+@using BlogStore.PresentationLayer.Models
+<div class="section search-result-wrap">
+    <div class="container">
+
+        <div class="row posts-entry">
+            <div class="col-lg-12">
+                @foreach (var item in Model)
+                {
+                    var encodedId = IdEncoder.EncodeId(item.ArticleId);
+                    <div class="blog-entry d-flex blog-entry-search-item">
+                        <a href="/Article/ArticleDetail/@encodedId" class="img-link me-4">
+                            <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/flexy-bootstrap-lite-1.0.0/assets/images/profile/user-1.jpg" : item.ImageUrl)" alt="Image" class="img-fluid">
+                        </a>
+                        <div>
+                            <span class="date">@item.CreatedDate.ToString("dd-MMM-yyyy") &bullet; <a href="#">@(item.Category?.CategoryName ?? "Kategori Yok")</a></span>
+                            <h2><a href="/Article/ArticleDetail/@encodedId">@item.Title</a></h2>
+                            <p>@(item.Description?.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
+                            <p><a href="/Article/ArticleDetail/@encodedId" class="btn btn-sm btn-outline-primary">Devamını Oku</a></p>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>

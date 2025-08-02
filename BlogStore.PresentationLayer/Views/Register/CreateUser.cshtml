@@ -1,0 +1,57 @@
+﻿@model UserRegisterViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hesap Oluştur</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <p class="login-subtitle">Yeni Hesap Oluşturun</p>
+        </div>
+        
+        <form method="post" class="login-form">
+            <div class="form-group">
+                <label class="form-label">Adınız</label>
+                <input type="text" asp-for="Name" class="form-control" placeholder="Adınızı giriniz" />
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Soyadınız</label>
+                <input type="text" asp-for="Surname" class="form-control" placeholder="Soyadınızı giriniz" />
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email Adresi</label>
+                <input type="email" asp-for="Email" class="form-control" placeholder="Email adresinizi giriniz" />
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Kullanıcı Adınız</label>
+                <input type="text" asp-for="Username" class="form-control" placeholder="Kullanıcı adınızı giriniz" />
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Şifreniz</label>
+                <input type="password" asp-for="Password" class="form-control" placeholder="Şifrenizi giriniz" />
+            </div>
+            
+            <button type="submit" class="login-btn">Hesap Oluştur</button>
+        </form>
+        
+        <div class="login-actions">
+            <p class="register-text">Zaten hesabınız var mı? <a href="/Login/UserLogin" class="register-link">Giriş Yapın</a></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

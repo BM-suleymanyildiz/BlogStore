@@ -1,0 +1,50 @@
+﻿@model BlogStore.EntityLayer.Entities.Comment
+
+@{
+    Layout = null;
+}
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container">
+    <br />
+    <br />
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="text-center">Yorum Güncelle</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Dikkat:</strong> Yorumunuz güncellenirken tekrar kontrol edilecek ve uygun olmayan içerikler yayınlanmayacaktır.
+                    </div>
+                    
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="CommentId" />
+                        
+                        <div class="mb-3">
+                            <label for="UserNameSurname" class="form-label">Yorum Yapan Adı Soyadı</label>
+                            <input type="text" asp-for="UserNameSurname" class="form-control" required />
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="CommentDetail" class="form-label">Yorum Detayı</label>
+                            <textarea asp-for="CommentDetail" class="form-control" rows="4" required 
+                                      placeholder="Lütfen saygılı ve yapıcı bir dil kullanın..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Yorumu Güncelle</button>
+                            <a href="/Comment/CommentList" class="btn btn-secondary">Geri Dön</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
